@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 // Definicion de funciones:
 int OperacionesBasicas(int contador);
 float OperacionesDecimales(int contador);
@@ -12,7 +13,7 @@ void desplazamiento(int *array1, int numero, int contador);
 void calcularBinario(int numero, int *binario);
 void funcionesAdicionales(int contador);
 void invertir(int *array);
-void NormaIEEE754();
+int NormaIEEE754();
 
 // Funciones:
 int verDatos(int *array, int size)
@@ -23,7 +24,7 @@ int verDatos(int *array, int size)
         printf("%d", array[i]);
         if (array[i] != 0 && array[i] != 1)
         {
-            printf("\nLos valores son distintos de 1 o 0. No puede ser.");
+            printf("\nLos valores son distintos de 1 o 0. No puede ser.\n");
             return 1;
         }
     }
@@ -257,14 +258,91 @@ void funcionesAdicionales(int contador)
     }
     verDatos(array1, 16);
 }
-void NormaIEEE754()
+int NormaIEEE754()
 {
     int array[32] = {0};
     float decimal = 0.0;
+    int parteEntera = 0;
+    int index = 0;
+    float parteDecimal = 0.0;
+    int resto[23] = {0};
+    int estandar = 0;
+    float positivo = 0;
+    int numeroEntero2 = 0;
+    int comaFlotante = 0;
+    int indexprueba = 0;
     printf("Dame un numero decimal: ");
     scanf("%f", &decimal);
-    calcularBinario(decimal, array);
+    if (decimal >= 0)
+    {
+        array[0] = 0;
+    }
+    else
+    {
+        array[0] = 1;
+    }
+    positivo = fabs(decimal);
+    // Cojo el valor entero del numero decimal.
+    parteEntera = (int)floor(positivo);
+    numeroEntero2 = parteEntera;
+    // Calculo su binario.
+    while (parteEntera > 0)
+    {
+        resto[index] = parteEntera % 2;
+        printf("el resto es: %d\n", resto[index]);
+        parteEntera = parteEntera / 2;
+        index++;
+    }
+    comaFlotante = index - 1;
+    printf("La coma flotante es: %d\n", comaFlotante);
+    // Calculo el binario del decimal.
+    parteDecimal = positivo - numeroEntero2;
+    while (parteDecimal != 0.00)
+    {
+        parteDecimal *= 2;
+        resto[index] = (int)floor(parteDecimal);
+        if (parteDecimal >= 1)
+        {
+            parteDecimal = parteDecimal - resto[index];
+        }
+        index++;
+        if (index > 23)
+        {
+            printf("Error1: el numero decimal no cumple con el estandar IEEE 754\n");
+            return 1;
+        }
+    }
+    int arrayordenado[23] = {0};
+    //ordeno la mantisa
+    for (index; index > 0; index--){
+        arrayordenado[index]= resto[index];
+    }
+
+    // Sacamos el binario del estandar es decir el exponente
+    estandar = comaFlotante + 127;
+    printf("estandar: %d\n", estandar);
+    int index2 = 8;
+    while (estandar > 0)
+    {
+        array[index2] = estandar % 2;
+        estandar = estandar / 2;
+        index2--;
+        if (index2 < 0)
+        {
+            printf("Error2: el numero decimal no cumple con el estandar IEEE 754\n");
+            return 1;
+        }
+    }
+    // rellenamos con la matisa
+    index = 9;
+    index2 = 0;
+    for (index; index < 33; index++)
+    {
+        array[index] = arrayordenado[index2];
+        index2++;
+    }
     verDatos(array, 32);
+    return 0;
 }
 
 int main()
@@ -341,6 +419,7 @@ int main()
     }
     else if (respuesta == 3)
     {
+        int res = 0;
         printf("Que tipo de funcion quiere hacer?\n signo y maginutd(1), complemento a 1(2), complemento a 2(3), Norma IEE 754(4): ");
         scanf("%d", &respuesta);
         for (int i = 1; i <= respuesta; i++)
@@ -352,7 +431,15 @@ int main()
             }
             if (i > 3 && i == respuesta)
             {
-                NormaIEEE754();
+                res = NormaIEEE754();
+                if (res == 1)
+                {
+                    printf("No se completo con exito\n");
+                }
+                else
+                {
+                    printf("Se completo con exito\n");
+                }
             }
         }
     }
