@@ -289,12 +289,21 @@ int NormaIEEE754()
     while (parteEntera > 0)
     {
         resto[index] = parteEntera % 2;
-        printf("el resto es: %d\n", resto[index]);
         parteEntera = parteEntera / 2;
         index++;
     }
     comaFlotante = index - 1;
-    printf("La coma flotante es: %d\n", comaFlotante);
+
+    int arrayordenado[23] = {0};
+    // ordeno la mantisa
+    int i = 0;
+    for (index; index > 1; index--)
+    {
+        printf("%d\n", index);
+        arrayordenado[i] = resto[index-2];
+        printf("el array ordenado es: %d\n", arrayordenado[i]);
+        i++;
+    }
     // Calculo el binario del decimal.
     parteDecimal = positivo - numeroEntero2;
     while (parteDecimal != 0.00)
@@ -311,11 +320,6 @@ int NormaIEEE754()
             printf("Error1: el numero decimal no cumple con el estandar IEEE 754\n");
             return 1;
         }
-    }
-    int arrayordenado[23] = {0};
-    //ordeno la mantisa
-    for (index; index > 0; index--){
-        arrayordenado[index]= resto[index];
     }
 
     // Sacamos el binario del estandar es decir el exponente
