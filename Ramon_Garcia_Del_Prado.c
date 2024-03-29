@@ -299,20 +299,20 @@ int NormaIEEE754()
     int i = 0;
     for (index; index > 1; index--)
     {
-        printf("%d\n", index);
         arrayordenado[i] = resto[index-2];
-        printf("el array ordenado es: %d\n", arrayordenado[i]);
         i++;
     }
     // Calculo el binario del decimal.
+    index = 0;
+    int arraynuevo[32] = {0};
     parteDecimal = positivo - numeroEntero2;
     while (parteDecimal != 0.00)
     {
         parteDecimal *= 2;
-        resto[index] = (int)floor(parteDecimal);
+        arraynuevo[index] = (int)floor(parteDecimal);
         if (parteDecimal >= 1)
         {
-            parteDecimal = parteDecimal - resto[index];
+            parteDecimal = parteDecimal - arraynuevo[index];
         }
         index++;
         if (index > 23)
@@ -321,10 +321,14 @@ int NormaIEEE754()
             return 1;
         }
     }
+    for (index; index > 0; index--)
+    {
+        arrayordenado[i] = arraynuevo[index-1];
+        i++;
+    }
 
     // Sacamos el binario del estandar es decir el exponente
     estandar = comaFlotante + 127;
-    printf("estandar: %d\n", estandar);
     int index2 = 8;
     while (estandar > 0)
     {
