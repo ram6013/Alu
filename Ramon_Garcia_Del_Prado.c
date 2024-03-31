@@ -266,7 +266,6 @@ int NormaIEEE754()
     int array[32] = {0};
     float decimal = 0.0;
     int parteEntera = 0;
-    int index = 0;
     float parteDecimal = 0.0;
     int resto[23] = {0};
     int estandar = 0;
@@ -289,9 +288,11 @@ int NormaIEEE754()
     parteEntera = (int)floor(positivo);
     numeroEntero2 = parteEntera;
     // Calculo su binario.
+    int index = 0;
     while (parteEntera > 0)
     {
         resto[index] = parteEntera % 2;
+        printf("%d", resto[index]);
         parteEntera = parteEntera / 2;
         index++;
     }
@@ -300,9 +301,12 @@ int NormaIEEE754()
     int arrayordenado[23] = {0};
     // ordeno la mantisa
     int i = 0;
-    for (index; index > 1; index--)
+    printf("\nQue añadimos\n");
+    for (index; index >= 2; index--)
     {
-        arrayordenado[i] = resto[index - 2];
+        printf("\neste es el valor del iindex %d", index);
+        arrayordenado[i] = resto[index-2];
+        printf("valor added: %d", arrayordenado[i]);
         i++;
     }
     // Calculo el binario del decimal.
@@ -324,9 +328,9 @@ int NormaIEEE754()
             return 1;
         }
     }
-    for (index; index > 0; index--)
+    for (index; index >= 0; index--)
     {
-        arrayordenado[i] = arraynuevo[index - 1];
+        arrayordenado[i] = arraynuevo[index];
         i++;
     }
 
