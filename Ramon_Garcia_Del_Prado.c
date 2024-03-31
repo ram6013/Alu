@@ -14,6 +14,10 @@ void calcularBinario(int numero, int *binario);
 void funcionesAdicionales(int contador);
 void invertir(int *array);
 int NormaIEEE754();
+void binarioDecimal(int i);
+int convertirDecimal(int *array);
+int ca2Decimnal(int *array);
+void operacionesCa2(int contador);
 
 // Funciones:
 int verDatos(int *array, int size)
@@ -219,44 +223,43 @@ void funcionesAdicionales(int contador)
         printf("El numero no puede ser mayor a 32767 o menor a -32767 debido a la capacidad de un array de 16 posiciones");
     }
     calcularBinario(numero, array1);
-    printf("Binario: \n");
-    verDatos(array1, 16);
-    switch (contador)
+    if (numero < 0)
     {
-    case 1: // signo y magnitud
-        if (numero < 0)
+        switch (contador)
         {
-            array1[0] = 1;
-        }
-        printf("Resultado signo y magnitud: \n");
-        break;
+        case 1: // signo y magnitud
+            printf("Resultado signo y magnitud: \n");
+            break;
 
-    case 2: // Complemento a 1
-        invertir(array1);
-        printf("Complemento a 1: \n");
-        break;
-    case 3: // Complemento a 2
-        invertir(array1);
-        printf("Complemento a 1: \n");
-        verDatos(array1, 16);
-        for (int i = 15; i < 16; i--)
-        {
-            if (array1[i] == 0)
+        case 2: // Complemento a 1
+            invertir(array1);
+            printf("Complemento a 1: \n");
+            break;
+        case 3: // Complemento a 2
+            invertir(array1);
+            printf("Complemento a 1: \n");
+            verDatos(array1, 16);
+            for (int i = 15; i < 16; i--)
             {
-                array1[i] = 1;
-                break;
+                if (array1[i] == 0)
+                {
+                    array1[i] = 1;
+                    break;
+                }
+                else if (array1[i] == 1)
+                {
+                    array1[i] = 0;
+                }
             }
-            else if (array1[i] == 1)
-            {
-                array1[i] = 0;
-            }
+            printf("complemento a 2: \n");
+            break;
+        default:
+            printf("Error: problemas con la operacion\n");
+            break;
         }
-        printf("complemento a 2: \n");
-    default:
-        printf("Error: problemas con la operacion");
-        break;
+    array1[0] = 1;
     }
-    verDatos(array1, 16);
+  verDatos(array1, 16);
 }
 int NormaIEEE754()
 {
@@ -299,7 +302,7 @@ int NormaIEEE754()
     int i = 0;
     for (index; index > 1; index--)
     {
-        arrayordenado[i] = resto[index-2];
+        arrayordenado[i] = resto[index - 2];
         i++;
     }
     // Calculo el binario del decimal.
@@ -323,7 +326,7 @@ int NormaIEEE754()
     }
     for (index; index > 0; index--)
     {
-        arrayordenado[i] = arraynuevo[index-1];
+        arrayordenado[i] = arraynuevo[index - 1];
         i++;
     }
 
@@ -352,28 +355,181 @@ int NormaIEEE754()
     verDatos(array, 32);
     return 0;
 }
+int convertirDecimal(int *array)
+{
+    int contador = 0;
+    int num = 0;
+    for (int i = 15; i > 0; i--)
+    {
+        num += pow(2 * array[i], contador);
+        contador++;
+    }
+    return num;
+}
+void binarioDecimal(int contador)
+{
+    int check = 0;
+    int num = 0;
+    int array[16] = {0};
+    rellenarDatos(array, 16);
+    check = verDatos(array, 16);
+    if (check == 1)
+    {
+        return;
+    }
+    if (array[0] == 1)
+    {
+        switch (contador)
+        {
+        case 1:
+        {
+            int contador = 0;
+            num = convertirDecimal(array);
+            num = -(num);
+            printf("El decimal de tu signo y magintud es: %d\n", num);
+            break;
+        }
+        case 2:
+            invertir(array);
+            num = convertirDecimal(array);
+            if (array[0] == 0)
+            {
+                num = -num;
+            }
+            num = convertirDecimal(array);
+            printf("El decimal de tu complemento a 1 es: %d\n", num);
+            break;
+        case 3:
+            invertir(array);
+            for (int i = 16; i > 0; i--)
+            {
+                if (array[i] == 1)
+                {
+                    array[i] = 0;
+                    break;
+                }
+                else if (array[i] == 0)
+                {
+                    array[i] = 1;
+                }
+                num = convertirDecimal(array);
+                if (array[0] == 0)
+                {
+                    num = -num;
+                }
+            }
+            printf("El decimal de tu complemento a 2 es: %d\n", num);
+        default:
+            break;
+        }
+    }
+    else if (array[0] == 0)
+    {
+        num = convertirDecimal(array);
+        printf("El decimal es: %d\n", num);
+    }
+}
+int ca2Decimnal(int *array)
+{
+    int num = 0;
+    if (array[0] == 1)
+    {
+
+        invertir(array);
+        for (int i = 16; i > 0; i--)
+        {
+            if (array[i] == 1)
+            {
+                array[i] = 0;
+                break;
+            }
+            else if (array[i] == 0)
+            {
+                array[i] = 1;
+            }
+            num = convertirDecimal(array);
+            if (array[0] == 0)
+            {
+                num = -num;
+            }
+        }
+    }
+    else if (array[0] == 0)
+    {
+        num = convertirDecimal(array);
+    }
+
+    return num;
+}
+void operacionesCa2(int contador)
+{
+    int array1[16], array2[16] = {0};
+    int num1, num2 = 0;
+    printf("Dame el ca2 en 16 bits\n");
+    rellenarDatos(array1, 16);
+    num1 = ca2Decimnal(array1);
+    printf("El ca2 en decimal es: %d\n", num1);
+    rellenarDatos(array2, 16);
+    num2 = ca2Decimnal(array2);
+    printf("El ca2 en decimal es: %d\n", num2);
+    switch (contador)
+    {
+    case 1:
+        printf("El resultado de la suma es: %d\n", num1 + num2);
+        break;
+    case 2:
+        printf("El resultado de la resta es: %d\n", num1 - num2);
+        break;
+    case 3:
+        printf("El resultado de la multiplicacion es: %d\n", num1 * num2);
+        break;
+    case 4:
+        printf("El resultado de la division es: %d\n", num1 / num2);
+        break;
+    default:
+        break;
+    }
+}
 
 int main()
 {
     int respuesta;
-    printf("Que tipo de operacion quieres?\n Hay dos tipos: operacion Aritmetica(1), operacion Logica(2) o funciones adicionales(3): ");
+    printf("Bienvenido a nuestra ALU\n");
+    printf("Que tipo de operacion quieres?\n Hay tres tipos: operacion Aritmetica(1), operacion Logica(2) o funciones adicionales(3): ");
     scanf("%d", &respuesta);
     if (respuesta == 1)
     {
-        printf("Que operacion quieres hacer?\n Estas son las opciones:\n sumar(1), restar(2), multiplicar(3), division(4), suma Decimal(5), resta Decimal(6), multiplicar Decimal(7), dividir Decimal(8)\n");
+        printf("Como quieres dar los datos en decimal(1) o Ca2(2)?\n");
         scanf("%d", &respuesta);
-        for (int i = 1; i < 8; i++)
+        if (respuesta == 1)
         {
-            if (i <= 4 && i == respuesta)
+            printf("Que operacion quieres hacer?\n Estas son las opciones:\n sumar(1), restar(2), multiplicar(3), division(4), suma Decimal(5), resta Decimal(6), multiplicar Decimal(7), dividir Decimal(8)\n");
+            scanf("%d", &respuesta);
+            for (int i = 1; i < 8; i++)
             {
+                if (i <= 4 && i == respuesta)
+                {
 
-                printf("El resultado de la operacion es: %d\n", OperacionesBasicas(i));
-                break;
+                    printf("El resultado de la operacion es: %d\n", OperacionesBasicas(i));
+                    break;
+                }
+                else if (i > 4 && i == respuesta)
+                {
+                    printf("El resultado de la operacion es: %f\n", OperacionesDecimales(i));
+                    break;
+                }
             }
-            else if (i > 4 && i == respuesta)
+        }
+        else if (respuesta == 2)
+        {
+            printf("Que operacion quieres hacer?\n Estas son las opciones:\n sumar(1), restar(2), multiplicar(3), division(4)\n");
+            scanf("%d", &respuesta);
+            for (int i = 1; i <= 4; i++)
             {
-                printf("El resultado de la operacion es: %f\n", OperacionesDecimales(i));
-                break;
+                if (i == respuesta)
+                {
+                    operacionesCa2(i);
+                }
             }
         }
     }
@@ -428,25 +584,42 @@ int main()
     else if (respuesta == 3)
     {
         int res = 0;
-        printf("Que tipo de funcion quiere hacer?\n signo y maginutd(1), complemento a 1(2), complemento a 2(3), Norma IEE 754(4): ");
+        printf("Que tipo de datos quieres ingresar? \n Entero(1), binario(2)\n");
         scanf("%d", &respuesta);
-        for (int i = 1; i <= respuesta; i++)
+        if (respuesta == 1)
         {
-            if (i <= 3 && i == respuesta)
+            printf("Que tipo de funcion quiere hacer?\n signo y maginutd(1), complemento a 1(2), complemento a 2(3), Norma IEE 754(4): ");
+            scanf("%d", &respuesta);
+            for (int i = 1; i <= respuesta; i++)
             {
-                funcionesAdicionales(i);
-                break;
-            }
-            if (i > 3 && i == respuesta)
-            {
-                res = NormaIEEE754();
-                if (res == 1)
+                if (i <= 3 && i == respuesta)
                 {
-                    printf("No se completo con exito\n");
+                    funcionesAdicionales(i);
+                    break;
                 }
-                else
+                if (i > 3 && i == respuesta)
                 {
-                    printf("Se completo con exito\n");
+                    res = NormaIEEE754();
+                    if (res == 1)
+                    {
+                        printf("No se completo con exito\n");
+                    }
+                    else
+                    {
+                        printf("Se completo con exito\n");
+                    }
+                }
+            }
+        }
+        else if (respuesta == 2)
+        {
+            printf("Que tipo de funcion quiere hacer?\n de signo y maginutd a decimal(1), complemento a 1 a decimal(2), complemento a 2 a decimal(3)\n");
+            scanf("%d", &respuesta);
+            for (int i = 1; i <= respuesta; i++)
+            {
+                if (i == respuesta)
+                {
+                    binarioDecimal(i);
                 }
             }
         }
