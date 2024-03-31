@@ -257,9 +257,9 @@ void funcionesAdicionales(int contador)
             printf("Error: problemas con la operacion\n");
             break;
         }
-    array1[0] = 1;
+        array1[0] = 1;
     }
-  verDatos(array1, 16);
+    verDatos(array1, 16);
 }
 int NormaIEEE754()
 {
@@ -361,7 +361,7 @@ int convertirDecimal(int *array)
     int num = 0;
     for (int i = 15; i > 0; i--)
     {
-        num += pow(2 * array[i], contador);
+        num += array[i] * pow(2, contador);
         contador++;
     }
     return num;
@@ -392,15 +392,10 @@ void binarioDecimal(int contador)
         case 2:
             invertir(array);
             num = convertirDecimal(array);
-            if (array[0] == 0)
-            {
-                num = -num;
-            }
-            num = convertirDecimal(array);
+            num = -num;
             printf("El decimal de tu complemento a 1 es: %d\n", num);
             break;
         case 3:
-            invertir(array);
             for (int i = 16; i > 0; i--)
             {
                 if (array[i] == 1)
@@ -412,11 +407,12 @@ void binarioDecimal(int contador)
                 {
                     array[i] = 1;
                 }
-                num = convertirDecimal(array);
-                if (array[0] == 0)
-                {
-                    num = -num;
-                }
+            }
+            invertir(array);
+            num = convertirDecimal(array);
+            if (array[0] == 0)
+            {
+                num = -num;
             }
             printf("El decimal de tu complemento a 2 es: %d\n", num);
         default:
@@ -434,9 +430,7 @@ int ca2Decimnal(int *array)
     int num = 0;
     if (array[0] == 1)
     {
-
-        invertir(array);
-        for (int i = 16; i > 0; i--)
+        for (int i = 15; i > 0; i--)
         {
             if (array[i] == 1)
             {
@@ -447,12 +441,10 @@ int ca2Decimnal(int *array)
             {
                 array[i] = 1;
             }
-            num = convertirDecimal(array);
-            if (array[0] == 0)
-            {
-                num = -num;
-            }
         }
+        invertir(array);
+        num = convertirDecimal(array);
+        num = -num;
     }
     else if (array[0] == 0)
     {
@@ -467,9 +459,11 @@ void operacionesCa2(int contador)
     int num1, num2 = 0;
     printf("Dame el ca2 en 16 bits\n");
     rellenarDatos(array1, 16);
+    verDatos(array1, 16);
     num1 = ca2Decimnal(array1);
     printf("El ca2 en decimal es: %d\n", num1);
     rellenarDatos(array2, 16);
+    verDatos(array2, 16);
     num2 = ca2Decimnal(array2);
     printf("El ca2 en decimal es: %d\n", num2);
     switch (contador)
